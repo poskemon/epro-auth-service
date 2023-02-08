@@ -1,4 +1,4 @@
-package com.poskemon.epro.authservice.config;
+package com.poskemon.epro.authservice.common.config;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
