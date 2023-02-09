@@ -8,7 +8,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,16 +30,24 @@ public class TokenProvider {
     public String create(Auth auth) {
         // 기한 지금으로부터 1일
         Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
+        // Long expiryDate = 1L; // 1초, 테스트용
+
+        // claim 생성
+        Claims claims = Jwts.claims()
+                            .setSubject(auth.getEmail())
+                            .setIssuedAt(new Date())
+                            .setExpiration(expiryDate);
+        claims.put("userNo", auth.getUserNo());
+        claims.put("email", auth.getEmail());
+        claims.put("role", auth.getRole());
 
         // JWT 생성
         return Jwts.builder()
                    // header에 들어갈 내용 및 서명을 하기 위한 SECRET_KEY
                    .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
-                   // payload에 들어갈 내용
-                   .setSubject(auth.getEmail())
+                   .setClaims(claims)
                    .setIssuer("poskemon")
-                   .setIssuedAt(new Date())
-                   .setExpiration(expiryDate)
+                   // .setExpiration(new Date(new Date().getTime() + expiryDate)) // 1초, 테스트용
                    .compact();
     }
 
@@ -50,7 +57,7 @@ public class TokenProvider {
      * @param token 검증하려는 JWT Token
      * @return 검증된 email(subject) 또는 예외
      */
-    public String validateAndGetUserId(String token) {
+    public String validateAndGetEmail(String token) {
         // parseClaimsJws 메서드가 Base 64로 디코딩 및 파싱
         // 즉, 헤더와 페이로드를 setSigningKey로 넘어온 비밀키를 이용해 서명 후, token의 서명과 비교.
         // 위조되지 않았다면 페이로드(Claims) 리턴, 위조라면 예외를 날림

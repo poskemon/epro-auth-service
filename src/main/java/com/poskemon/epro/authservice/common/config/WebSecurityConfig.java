@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.stereotype.Component;
 
 /**
  * 스프링 시큐리티 설정 클래스
@@ -13,11 +14,12 @@ import org.springframework.security.web.SecurityFilterChain;
  * @author isohyeon
  */
 @EnableWebSecurity
+@Component
 public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // http 시큐리티 빌더
-        http.cors() // WebMvcConfig에서 이미 설정했으므로 기본 cors 설정.
+        http.cors()
             .and()
             .csrf()
             .disable() // csrf는 현재 사용하지 않으므로 disable
@@ -32,7 +34,6 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
 
     /**
      * 패스워드 암호화

@@ -34,7 +34,7 @@ public class AuthController {
 
         if(originalAuth != null) {
             // 토큰 생성
-            final String token = tokenProvider.create(auth);
+            final String token = tokenProvider.create(originalAuth);
             final AuthResponseDTO authResponseDTO = AuthResponseDTO.builder()
                 .token(token)
                 .userNo(originalAuth.getUserNo())
