@@ -1,5 +1,6 @@
 package com.poskemon.epro.authservice.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL) // null 필드 생략
 public class ResponseDTO<T> {
 	@JsonProperty("RETURN_MSG")
 	private String msg;
