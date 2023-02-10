@@ -1,9 +1,9 @@
 package com.poskemon.epro.authservice.service.impl;
 
+import com.poskemon.epro.authservice.common.constants.Message;
 import com.poskemon.epro.authservice.domain.entity.Auth;
 import com.poskemon.epro.authservice.repository.AuthRepository;
 import com.poskemon.epro.authservice.service.AuthService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +13,24 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final AuthRepository authRepository;
+
+    /**
+     * 계정 생성
+     *
+     * @param auth 등록할 사용자 정보를 다음 객체
+     * @return the saved entity
+     */
+    @Override
+    public Auth create(Auth auth) {
+        if(auth == null) {
+            throw new RuntimeException(Message.REQ_DATA_FAIL.getMsg());
+        }
+        final String email = auth.getEmail();
+        if(authRepository.existsByEmail(email)) {
+            throw new RuntimeException(Message.ALREADY_USER_FAIL.getMsg());
+        }
+        return authRepository.save(auth);
+    }
 
     /**
      * 로그인 인증

@@ -1,8 +1,5 @@
 package com.poskemon.epro.authservice.domain.dto;
 
-import com.poskemon.epro.authservice.common.constants.UserRole;
-import com.poskemon.epro.authservice.common.util.UserRoleConverter;
-import javax.persistence.Convert;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +16,5 @@ public class AuthResponseDTO {
     private String token;
     private long userNo;
     private String email;
-    private UserRole role;
+    private int role;
 }

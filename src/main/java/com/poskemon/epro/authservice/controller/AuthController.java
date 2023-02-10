@@ -22,6 +22,42 @@ public class AuthController {
     private final TokenProvider tokenProvider;
 
     /**
+     * 계정 생성
+     *
+     * @param auth 생성할 사용자 정보를 담은 객체
+     * @return http status와 응답 데이터(등록한 user 또는 에러 메시지)를 반환
+     */
+    @PostMapping("/signup")
+    public ResponseEntity<?> registerUser(@RequestBody Auth auth) {
+        try {
+            if (auth == null) {
+                throw new RuntimeException(Message.REQ_DATA_FAIL.getMsg());
+            }
+            // 저장할 유저 (비밀번호 암호화)
+            Auth requestUser = Auth.builder()
+                                   .email(auth.getEmail())
+                                   .userName(auth.getUserName())
+                                   .password(passwordEncoder.encode(auth.getPassword()))
+                                   .phoneNumber(auth.getPhoneNumber())
+                                   .role(auth.getRole())
+                                   .companyName(auth.getCompanyName())
+                                   .build();
+
+            Auth registeredUser = authService.create(requestUser);
+            registeredUser.setPassword(null); // 비밀번호 숨김
+
+            ResponseDTO response = ResponseDTO.builder()
+                                              .msg(Message.SIGNUP_SUCCESS.getMsg())
+                                              .data(registeredUser)
+                                              .build();
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            ResponseDTO response = ResponseDTO.builder().msg(Message.SIGNUP_FAIL.getMsg()).build();
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    /**
      * 로그인
      *
      * 로그인 성공 시 토큰 생성 후 반환
