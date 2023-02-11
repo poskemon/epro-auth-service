@@ -75,6 +75,8 @@ public class AuthController {
                 .token(token)
                 .userNo(originalAuth.getUserNo())
                 .email(originalAuth.getEmail())
+                .userName(originalAuth.getUserName())
+                .companyName(originalAuth.getCompanyName())
                 .role(originalAuth.getRole())
                 .build();
 
