@@ -38,7 +38,9 @@ public class TokenProvider {
                             .setIssuedAt(new Date())
                             .setExpiration(expiryDate);
         claims.put("userNo", auth.getUserNo());
+        claims.put("userName", auth.getUserName());
         claims.put("email", auth.getEmail());
+        claims.put("companyName", auth.getCompanyName());
         claims.put("role", auth.getRole());
 
         // JWT 생성
