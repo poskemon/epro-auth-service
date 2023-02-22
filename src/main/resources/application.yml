@@ -20,15 +20,21 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  kafka:
+    producer:
+      bootstrap-servers: 204.236.155.165:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 # Eureka
 eureka:
   instance:
     prefer-ip-address: true
-  #    ip-address:
+    ip-address: localhost
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://13.208.124.73:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
+    #      defaultZone: http://13.208.124.73:8761/eureka/
     registryFetchIntervalSeconds: 5

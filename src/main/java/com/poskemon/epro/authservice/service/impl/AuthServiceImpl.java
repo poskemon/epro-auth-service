@@ -1,10 +1,12 @@
 package com.poskemon.epro.authservice.service.impl;
 
 import com.poskemon.epro.authservice.common.constants.Message;
+import com.poskemon.epro.authservice.domain.dto.UserDTO;
 import com.poskemon.epro.authservice.domain.entity.Auth;
 import com.poskemon.epro.authservice.repository.AuthRepository;
 import com.poskemon.epro.authservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final AuthRepository authRepository;
+    private final KafkaTemplate<String, UserDTO> kafkaTemplate;
 
     /**
      * 계정 생성
@@ -29,7 +32,15 @@ public class AuthServiceImpl implements AuthService {
         if(authRepository.existsByEmail(email)) {
             throw new RuntimeException(Message.ALREADY_USER_FAIL.getMsg());
         }
-        return authRepository.save(auth);
+        Auth newAuth = authRepository.save(auth);
+        kafkaTemplate.send("user-register", new UserDTO(newAuth.getUserNo(),
+                                                        newAuth.getEmail(),
+                                                        newAuth.getUserName(),
+                                                        newAuth.getPhoneNumber(),
+                                                        newAuth.getRole(),
+                                                        newAuth.getCompanyName()));
+
+        return newAuth;
     }
 
     /**

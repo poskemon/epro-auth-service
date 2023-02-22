@@ -42,6 +42,9 @@ dependencies {
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 	// spring-security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// kafka
+	implementation 'org.springframework.kafka:spring-kafka'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
 dependencyManagement {
